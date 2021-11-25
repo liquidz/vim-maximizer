@@ -23,34 +23,8 @@ endif
 
 let g:loaded_vim_maximizer = 1
 
-if !exists('g:maximizer_set_default_mapping')
-    let g:maximizer_set_default_mapping = 1
-endif
-
-if !exists('g:maximizer_set_mapping_with_bang')
-    let g:maximizer_set_mapping_with_bang = 0
-endif
-
 if !exists('g:maximizer_restore_on_winleave')
-    let g:maximizer_restore_on_winleave = 0
-endif
-
-if !exists('g:maximizer_default_mapping_key')
-    let g:maximizer_default_mapping_key = '<F3>'
-endif
-
-command! -bang -nargs=0 -range MaximizerToggle :call s:toggle(<bang>0)
-
-if g:maximizer_set_default_mapping
-    let command = ':MaximizerToggle'
-
-    if g:maximizer_set_mapping_with_bang
-        let command .= '!'
-    endif
-
-    silent! exe 'nnoremap <silent>' . g:maximizer_default_mapping_key . ' ' . command . '<CR>'
-    silent! exe 'vnoremap <silent>' . g:maximizer_default_mapping_key . ' ' . command . '<CR>gv'
-    silent! exe 'inoremap <silent>' . g:maximizer_default_mapping_key . ' <C-o>' . command . '<CR>'
+    let g:maximizer_restore_on_winleave = 1
 endif
 
 fun! s:maximize()
@@ -71,13 +45,8 @@ fun! s:restore()
     end
 endfun
 
-fun! s:toggle(force)
-    if exists('t:maximizer_sizes') && (a:force || (t:maximizer_sizes.after == winrestcmd()))
-        call s:restore()
-    elseif winnr('$') > 1
-        call s:maximize()
-    endif
-endfun
+command! MaximizerMaximize :call s:maximize()
+command! MaximizerRestore :call s:restore()
 
 if g:maximizer_restore_on_winleave
     augroup maximizer
